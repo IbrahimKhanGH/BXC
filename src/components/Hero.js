@@ -20,7 +20,7 @@ function Hero() {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col justify-center text-white px-4 md:px-0">
+    <div id="hero" className="relative min-h-screen flex flex-col justify-center text-white px-4 md:px-0">
       {/* Background Image with enhanced gradient */}
       <motion.div 
         initial={{ opacity: 0 }}

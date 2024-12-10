@@ -15,8 +15,13 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const scrollToSection = (e, sectionId) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsMobileMenuOpen(false); // Close the mobile menu if open
   };
 
   return (
@@ -35,10 +40,14 @@ function Header() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             {/* Logo */}
-            <motion.div
+            <motion.a
+              href="#"
+              onClick={(e) => scrollToSection(e, "hero")}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex items-center"
+              className="flex items-center cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <img
                 src={bxcLogo}
@@ -47,17 +56,36 @@ function Header() {
                   isScrolled ? "brightness-100" : "brightness-200"
                 }`}
               />
-            </motion.div>
+            </motion.a>
 
             {/* Navigation Links - Hidden on Mobile */}
             <div className="hidden md:flex items-center space-x-8">
-              <NavLink href="#problem-solution" isScrolled={isScrolled}>
+              <NavLink
+                href="#problem-solution"
+                isScrolled={isScrolled}
+                onClick={(e) => scrollToSection(e, "problem-solution")}
+              >
                 Services
               </NavLink>
-              <NavLink href="#process" isScrolled={isScrolled}>
+              <NavLink
+                href="#process"
+                isScrolled={isScrolled}
+                onClick={(e) => scrollToSection(e, "process")}
+              >
                 Process
               </NavLink>
-              <NavLink href="#contact-form" isScrolled={isScrolled}>
+              <NavLink
+                href="#testimonials"
+                isScrolled={isScrolled}
+                onClick={(e) => scrollToSection(e, "testimonials")}
+              >
+                Reviews
+              </NavLink>
+              <NavLink
+                href="#contact-form"
+                isScrolled={isScrolled}
+                onClick={(e) => scrollToSection(e, "contact-form")}
+              >
                 Contact
               </NavLink>
             </div>
@@ -66,7 +94,7 @@ function Header() {
             <div className="hidden md:flex items-center space-x-6">
               <motion.a
                 whileHover={{ scale: 1.05 }}
-                href="tel:+1234567890"
+                href="tel:+9033203030"
                 className={`flex items-center text-lg font-semibold transition-colors ${
                   isScrolled
                     ? "text-gray-800 hover:text-blue-600"
@@ -86,21 +114,19 @@ function Header() {
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                (123) 456-7890
+                (903) 320-3030
               </motion.a>
-              <motion.div className="hidden md:flex items-center space-x-6">
-                <CTAButton
-                  text="Free Estimate"
-                  type="primary"
-                  size="small"
-                  scrollTo="contact-form"
-                />
-              </motion.div>
+              <CTAButton
+                text="Free Estimate"
+                type="primary"
+                size="small"
+                scrollTo="contact-form"
+              />
             </div>
 
             {/* Mobile Menu Button */}
             <motion.button
-              onClick={toggleMobileMenu}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               whileTap={{ scale: 0.95 }}
               className="md:hidden p-2"
             >
@@ -142,39 +168,28 @@ function Header() {
               <div className="flex flex-col space-y-4">
                 <MobileNavLink
                   href="#problem-solution"
-                  onClick={toggleMobileMenu}
+                  onClick={(e) => scrollToSection(e, "problem-solution")}
                 >
                   Services
                 </MobileNavLink>
-                <MobileNavLink href="#process" onClick={toggleMobileMenu}>
+                <MobileNavLink
+                  href="#process"
+                  onClick={(e) => scrollToSection(e, "process")}
+                >
                   Process
                 </MobileNavLink>
-                <MobileNavLink href="#testimonials" onClick={toggleMobileMenu}>
+                <MobileNavLink
+                  href="#testimonials"
+                  onClick={(e) => scrollToSection(e, "testimonials")}
+                >
                   Reviews
                 </MobileNavLink>
-                <MobileNavLink href="#contact-form" onClick={toggleMobileMenu}>
+                <MobileNavLink
+                  href="#contact-form"
+                  onClick={(e) => scrollToSection(e, "contact-form")}
+                >
                   Contact
                 </MobileNavLink>
-                <motion.a
-                  href="tel:+1234567890"
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center text-white py-2"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                    />
-                  </svg>
-                  (123) 456-7890
-                </motion.a>
               </div>
             </div>
           </motion.div>
@@ -185,9 +200,10 @@ function Header() {
 }
 
 // Navigation Link Component
-const NavLink = ({ href, children, isScrolled }) => (
+const NavLink = ({ href, children, isScrolled, onClick }) => (
   <motion.a
     href={href}
+    onClick={onClick}
     whileHover={{ y: -2 }}
     className={`font-medium transition-colors ${
       isScrolled

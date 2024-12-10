@@ -37,8 +37,8 @@ function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <FaPhone className="mr-3" />
-                <a href="tel:+1234567890" className="hover:text-white transition-colors duration-300">
-                  (123) 456-7890
+                <a href="tel:+9033203030" className="hover:text-white transition-colors duration-300">
+                  (903) 320-3030
                 </a>
               </li>
               <li className="flex items-center">
