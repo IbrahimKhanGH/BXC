@@ -45,21 +45,21 @@ function Header() {
               onClick={(e) => scrollToSection(e, "hero")}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex items-center cursor-pointer"
+              className="flex items-center cursor-pointer mr-4"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <img
                 src={bxcLogo}
                 alt="BXC Roofing"
-                className={`h-12 md:h-14 transition-all duration-300 ${
+                className={`h-8 md:h-14 transition-all duration-300 ${
                   isScrolled ? "brightness-100" : "brightness-200"
                 }`}
               />
             </motion.a>
 
             {/* Navigation Links - Hidden on Mobile */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-8 flex-grow justify-center">
               <NavLink
                 href="#problem-solution"
                 isScrolled={isScrolled}
@@ -128,7 +128,7 @@ function Header() {
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2"
+              className="md:hidden p-2 mr-2"
             >
               <svg
                 className={`w-6 h-6 ${

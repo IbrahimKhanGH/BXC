@@ -11,7 +11,7 @@ function App() {
   const { scrollYProgress } = useScroll();
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden w-full">
       <Header />
       
       <motion.div
