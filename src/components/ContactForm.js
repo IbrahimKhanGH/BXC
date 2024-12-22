@@ -1,7 +1,113 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 
 function ContactForm() {
+  const formRef = useRef();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    serviceType: '',
+    message: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [formStatus, setFormStatus] = useState({
+    submitted: false,
+    error: false,
+    message: ''
+  });
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
+      newErrors.email = 'Valid email is required';
+    }
+
+    // Phone validation
+    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+    if (!formData.phone.trim() || !phoneRegex.test(formData.phone)) {
+      newErrors.phone = 'Valid phone number is required';
+    }
+
+    // Service type validation
+    if (!formData.serviceType) {
+      newErrors.serviceType = 'Please select a service type';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      setFormStatus({
+        submitted: true,
+        error: true,
+        message: 'Please fill in all required fields correctly.'
+      });
+      return;
+    }
+
+    setFormStatus({ submitted: true, error: false, message: 'Sending...' });
+
+    try {
+      const result = await emailjs.sendForm(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+      );
+
+      if (result.text === 'OK') {
+        setFormStatus({
+          submitted: true,
+          error: false,
+          message: 'Thank you! We will contact you within 24 hours.'
+        });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          serviceType: '',
+          message: ''
+        });
+      }
+    } catch (error) {
+      setFormStatus({
+        submitted: true,
+        error: true,
+        message: 'There was an error. Please try again or call us directly at (903) 320-3030.'
+      });
+    }
+  };
+
   const reviews = [
     {
       name: "John Smith",
@@ -30,7 +136,6 @@ function ContactForm() {
     <section id="contact-form" className="relative py-16 md:py-20">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
-          {/* Contact Form - Now with vertical centering */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -46,44 +151,93 @@ function ContactForm() {
                 </p>
               </div>
 
-              <form className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                <div>
                   <input
                     type="text"
-                    placeholder="Name"
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your Name*"
+                    className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
+                      errors.name ? 'border-red-500' : 'border-gray-700'
+                    }`}
                   />
-                  <input
-                    type="tel"
-                    placeholder="Phone"
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                 </div>
 
-                <div className="mb-4">
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Email Address*"
+                      className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
+                        errors.email ? 'border-red-500' : 'border-gray-700'
+                      }`}
+                    />
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                  </div>
+
+                  <div>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Phone Number*"
+                      className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
+                        errors.phone ? 'border-red-500' : 'border-gray-700'
+                      }`}
+                    />
+                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                  </div>
                 </div>
 
-                <div className="mb-4">
-                  <select 
-                    className="w-full bg-gray-700 text-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    defaultValue=""
+                <select
+                  name="serviceType"
+                  value={formData.serviceType}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white border ${
+                    errors.serviceType ? 'border-red-500' : 'border-gray-700'
+                  }`}
+                >
+                  <option value="">Select Service Type*</option>
+                  <option value="roof-replacement">Roof Replacement</option>
+                  <option value="roof-repair">Roof Repair</option>
+                  <option value="emergency">Emergency Service</option>
+                  <option value="inspection">Free Inspection</option>
+                  <option value="other">Other</option>
+                </select>
+                {errors.serviceType && (
+                  <p className="text-red-500 text-sm mt-1">{errors.serviceType}</p>
+                )}
+
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Additional Details"
+                  rows="4"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-700"
+                ></textarea>
+
+                {formStatus.submitted && (
+                  <div
+                    className={`p-4 rounded-lg ${
+                      formStatus.error ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                    }`}
                   >
-                    <option value="" disabled>Service Needed</option>
-                    <option>Roof Inspection</option>
-                    <option>Roof Repair</option>
-                    <option>New Roof</option>
-                    <option>Emergency Service</option>
-                  </select>
-                </div>
+                    {formStatus.message}
+                  </div>
+                )}
 
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  type="submit"
                   className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   Get Free Estimate
@@ -92,7 +246,7 @@ function ContactForm() {
             </div>
           </motion.div>
 
-          {/* Reviews Section - Remains the same */}
+          {/* Reviews Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
