@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import CTAButton from './CTAButton';
 import ScrollIndicator from './ScrollIndicator';
 
 function Process() {
@@ -56,11 +55,15 @@ function Process() {
               transition={{ delay: index * 0.2 }}
               className="relative"
             >
-              {/* Arrow Connection - Hidden on mobile */}
+              {/* Arrow Connection - Adjusted right positioning */}
               {index < journey.length - 1 && (
-                <div className="hidden md:flex absolute top-1/2 -right-4 w-8 items-center z-10">
-                  <div className="w-full h-0.5 bg-red-500"></div>
-                  <div className="absolute right-0 w-3 h-3 border-t-2 border-r-2 border-red-500 transform rotate-45 -translate-y-1/2"></div>
+                <div className="hidden md:block absolute top-1/2 -right-8 w-10 z-10">
+                  <div className="relative h-0.5 bg-red-500 top-[1px]">
+                    <div 
+                      className="absolute -right-[1px] top-1/2 w-2.5 h-2.5 border-t-2 border-r-2 border-red-500 
+                      transform rotate-45 -translate-y-1/2"
+                    />
+                  </div>
                 </div>
               )}
               

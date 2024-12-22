@@ -11,7 +11,6 @@ import after3 from '../assets/after3.jpg';
 
 function ProblemSolution() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const scrollRef = useRef(null);
 
   const transformations = [
     {
@@ -47,11 +46,6 @@ function ProblemSolution() {
       x: direction < 0 ? '100%' : '-100%',
       opacity: 0
     })
-  };
-
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset, velocity) => {
-    return Math.abs(offset) * velocity;
   };
 
   const [[page, direction], setPage] = useState([0, 0]);
