@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import CTAButton from './CTAButton';
 import ScrollIndicator from './ScrollIndicator';
 import roofBackground from '../assets/hero-roof.jpg';
+import { FaLink } from 'react-icons/fa';
 
 function Hero() {
   const fadeIn = {
@@ -54,19 +55,19 @@ function Hero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-yellow-400"
+            className="text-blue-400"
           >
-            East Texas' Most Trusted
+            The Most Trusted Roofing Company
           </motion.span><br />
-          Roofing Experts
+          in East Texas
         </motion.h1>
 
         <motion.p 
           variants={fadeIn}
           className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto"
         >
-          Professional roofing services with a 100% satisfaction guarantee. 
-          Get your FREE inspection today!
+          Locally owned and operated with a 10-Year Labor Warranty included.
+          Professional roofing services with a 100% satisfaction guarantee.
         </motion.p>
 
         <motion.div 
@@ -74,17 +75,20 @@ function Hero() {
           className="flex flex-col sm:flex-row justify-center gap-4 mb-8 md:mb-12"
         >
           <CTAButton 
-            text="Get Free Estimate"
+            text="Schedule a Free Inspection"
             type="primary"
             size="large"
             className="w-full sm:w-auto"
           />
-          <CTAButton 
-            text="24/7 Emergency Service"
-            type="secondary"
-            size="large"
-            className="w-full sm:w-auto"
-          />
+          <a 
+            href="https://linktr.ee/bxcroofing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg transition-all duration-300"
+          >
+            <FaLink className="text-xl" />
+            Our Links
+          </a>
         </motion.div>
 
         {/* Trust Indicators */}
@@ -93,9 +97,9 @@ function Hero() {
           className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto"
         >
           {[
-            { number: "500+", text: "Projects Completed" },
-            { number: "4.9★", text: "Customer Rating" },
-            { number: "15+", text: "Years Experience" },
+            { number: "1200+", text: "Projects Completed" },
+            { number: "5.0★", text: "Customer Rating" },
+            { number: "25+", text: "Years Experience" },
             { number: "100%", text: "Satisfaction" }
           ].map((item, index) => (
             <motion.div
@@ -105,7 +109,7 @@ function Hero() {
               className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-3 sm:p-4"
             >
               <motion.div 
-                className="text-2xl sm:text-3xl font-bold text-yellow-400"
+                className="text-2xl sm:text-3xl font-bold text-white"
               >
                 {item.number}
               </motion.div>

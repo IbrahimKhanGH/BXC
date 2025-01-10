@@ -117,7 +117,7 @@ function Header() {
                 (903) 320-3030
               </motion.a>
               <CTAButton
-                text="Free Estimate"
+                text="Free Inspection"
                 type="primary"
                 size="small"
                 scrollTo="contact-form"
