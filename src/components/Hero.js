@@ -109,7 +109,7 @@ function Hero() {
               className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-3 sm:p-4"
             >
               <motion.div 
-                className="text-2xl sm:text-3xl font-bold text-white"
+                className="text-2xl sm:text-3xl font-bold text-blue-400"
               >
                 {item.number}
               </motion.div>
