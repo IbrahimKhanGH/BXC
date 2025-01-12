@@ -116,7 +116,7 @@ function Header() {
                 </svg>
                 (903) 320-3030
               </motion.a>
-              <CTAButton
+              <CTAButton                                                                                                                      
                 text="Free Inspection"
                 type="primary"
                 size="small"
