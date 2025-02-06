@@ -81,8 +81,7 @@ function ContactForm() {
       const result = await emailjs.sendForm(
         process.env.REACT_APP_EMAILJS_SERVICE_ID,
         process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-        formRef.current,
-        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+        formRef.current
       );
 
       if (result.text === 'OK') {
@@ -100,6 +99,7 @@ function ContactForm() {
         });
       }
     } catch (error) {
+      console.error('EmailJS Error:', error);
       setFormStatus({
         submitted: true,
         error: true,
