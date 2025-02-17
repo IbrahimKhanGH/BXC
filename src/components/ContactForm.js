@@ -110,25 +110,25 @@ function ContactForm() {
 
   const reviews = [
     {
-      name: "John Smith",
+      name: "Linda Robertson",
       location: "Tyler, TX",
-      text: "BXC Roofing did an amazing job on our roof replacement. Professional, efficient, and clean!",
+      text: "I would highly recommend BXC Roofing! My experience with this company was awesome. Tyler Pegg and everyone at BXC were incredible. Each step in the roofing process was explained and the work completed beautifully and on time! I had never really thought about a roof being beautiful…but my roof is BEAUTIFUL!",
       rating: 5,
-      image: "https://i.pravatar.cc/150?img=1"
+      image: "https://i.pravatar.cc/150?img=5"
     },
     {
-      name: "Sarah Johnson",
+      name: "Helene Deisher",
       location: "Longview, TX",
-      text: "Best roofing company in East Texas! They responded quickly to our emergency and fixed everything perfectly.",
+      text: "Excellent job on our rental property roofs. They were finished quickly. Their work was clean and the roofs look wonderful. They also had to coordinate with our insurance company and they worked seamlessly with them. I can highly recommend them!",
       rating: 5,
-      image: "https://i.pravatar.cc/150?img=2"
+      image: "https://i.pravatar.cc/150?img=9"
     },
     {
-      name: "Mike Williams",
+      name: "Mark Little",
       location: "Marshall, TX",
-      text: "Great experience from start to finish. Fair pricing and excellent workmanship.",
+      text: "BXC did an outstanding job on our new roof. Extremely easy to work with from start to finish. We were really impressed how they have separate managers for each step of the process. Brett, Luke, and Jake were extremely helpful. Thanks guys!!",
       rating: 5,
-      image: "https://i.pravatar.cc/150?img=3"
+      image: "https://i.pravatar.cc/150?img=8"
     }
   ];
 
