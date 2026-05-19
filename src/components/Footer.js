@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import { FiLink, FiPhone, FiMail, FiMapPin, FiArrowRight } from 'react-icons/fi';
-import bxcLogo from '../assets/bxclogo-new.png';
+import bxcLogo from '../assets/BXC Logo Preview.png';
 
 function Footer() {
   return (
@@ -34,7 +34,7 @@ function Footer() {
         {/* Columns */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 py-14">
           <div className="md:col-span-5">
-            <img src={bxcLogo} alt="BXC Roofing" className="h-14 mix-blend-screen mb-5" />
+            <img src={bxcLogo} alt="BXC Roofing" className="w-48 h-auto mb-5" />
             <p className="max-w-sm leading-relaxed text-white/65">
               Professional roofing services in East Texas. Licensed, insured, and trusted by homeowners since 2008.
             </p>

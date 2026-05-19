@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPhone, FiMenu, FiX } from 'react-icons/fi';
-import bxcLogo from '../assets/bxclogo-new.png';
+import bxcLogo from '../assets/BXC Logo Preview.png';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -48,11 +48,13 @@ function Header() {
               onClick={(e) => go(e, 'hero')}
               className="flex items-center gap-3"
             >
-              <img
-                src={bxcLogo}
-                alt="BXC Roofing"
-                className="h-10 md:h-12 mix-blend-screen"
-              />
+              <div className="h-11 md:h-14 w-40 md:w-52 overflow-hidden flex items-center justify-center">
+                <img
+                  src={bxcLogo}
+                  alt="BXC Roofing"
+                  className="w-full h-full object-contain scale-[2.2] origin-center"
+                />
+              </div>
             </a>
 
             {/* Center nav */}
