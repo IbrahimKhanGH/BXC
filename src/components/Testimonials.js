@@ -86,6 +86,15 @@ function Testimonials() {
           </motion.div>
 
           <div className="lg:col-span-8">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="text-[11px] uppercase tracking-eyebrow font-bold text-white/55 mb-5 md:mb-6"
+            >
+              200+ reviews on Google
+            </motion.p>
             <div className="bg-charcoal-900 border border-white/10 p-8 md:p-12 min-h-[320px] flex flex-col">
               <AnimatePresence mode="wait">
                 <motion.div
