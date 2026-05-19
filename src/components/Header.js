@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiPhone, FiMenu, FiX } from 'react-icons/fi';
-import bxcLogo from '../assets/bxclogo.png';
+import bxcLogo from '../assets/bxclogo-new.png';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -51,7 +51,7 @@ function Header() {
               <img
                 src={bxcLogo}
                 alt="BXC Roofing"
-                className="h-10 md:h-12 brightness-[1.6]"
+                className="h-10 md:h-12 rounded-sm"
               />
             </a>
 
