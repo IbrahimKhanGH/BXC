@@ -1,132 +1,150 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import CTAButton from './CTAButton';
+import { FiPhone, FiArrowRight } from 'react-icons/fi';
 import ScrollIndicator from './ScrollIndicator';
 import roofBackground from '../assets/hero-roof.jpg';
-import { FaLink } from 'react-icons/fa';
 
 function Hero() {
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+  const stagger = {
+    animate: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
   };
-
-  const staggerContainer = {
+  const rise = {
+    initial: { opacity: 0, y: 22 },
     animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+    },
   };
 
   return (
-    <div id="hero" className="relative min-h-screen flex flex-col justify-center text-white px-4 md:px-0">
-      {/* Background Image with enhanced gradient */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+    <section
+      id="hero"
+      className="relative min-h-[88vh] md:min-h-[92vh] flex flex-col text-white overflow-hidden"
+    >
+      {/* Background */}
+      <motion.div
+        initial={{ scale: 1.08, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         className="absolute inset-0 z-0"
       >
-        <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
-        {/* Enhanced gradient transition */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-gray-900 z-20"></div>
-        <img 
+        <img
           src={roofBackground}
-          alt="Professional Roofing"
+          alt="BXC Roofing"
           className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-charcoal-950/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/85 via-charcoal-950/40 to-charcoal-950" />
+        <div className="absolute inset-0 bg-gradient-to-r from-charcoal-950/85 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-grain opacity-[0.08] mix-blend-overlay" />
       </motion.div>
 
-      {/* Content */}
-      <motion.div 
-        variants={staggerContainer}
+      {/* MAIN CONTENT BLOCK */}
+      <motion.div
+        variants={stagger}
         initial="initial"
         animate="animate"
-        className="relative z-30 container mx-auto px-4 text-center py-12 md:py-0"
+        className="relative z-20 px-6 md:px-10 max-w-7xl mx-auto w-full pt-32 sm:pt-36 md:pt-44 pb-14 md:pb-20"
       >
-        <motion.h1 
-          variants={fadeIn}
-          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight"
-        >
-          Protect Your Home With<br />
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-blue-400"
-          >
-            The Most Trusted Roofing Company
-          </motion.span><br />
-          in East Texas
-        </motion.h1>
-
-        <motion.p 
-          variants={fadeIn}
-          className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto"
-        >
-          Locally owned and operated with a 10-Year Labor Warranty included.
-          Professional roofing services with a 100% satisfaction guarantee.
-        </motion.p>
-
-        <motion.div 
-          variants={fadeIn}
-          className="flex flex-col sm:flex-row justify-center gap-4 mb-8 md:mb-12"
-        >
-          <CTAButton 
-            text="Schedule a Free Inspection"
-            type="primary"
-            size="large"
-            className="w-full sm:w-auto"
-          />
-          <a 
-            href="https://linktr.ee/bxcroofing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg transition-all duration-300"
-          >
-            <FaLink className="text-xl" />
-            Our Links
-          </a>
+        {/* Eyebrow */}
+        <motion.div variants={rise} className="mb-10 sm:mb-12 md:mb-16">
+          <div className="flex items-center gap-4 text-[11px] uppercase tracking-eyebrow font-bold text-royal-400">
+            <span className="w-10 h-px bg-royal-500" />
+            <span>East Texas · Locally Owned · Licensed & Insured</span>
+          </div>
         </motion.div>
 
-        {/* Trust Indicators */}
-        <motion.div 
-          variants={staggerContainer}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto"
+        {/* Headline */}
+        <motion.h1
+          variants={rise}
+          className="display-xxl text-[56px] sm:text-7xl md:text-8xl lg:text-[132px] leading-[0.95] sm:leading-[0.92] md:leading-[0.9] text-white max-w-5xl"
         >
-          {[
-            { number: "1200+", text: "Projects Completed" },
-            { number: "5.0★", text: "Customer Rating" },
-            { number: "25+", text: "Years Experience" },
-            { number: "100%", text: "Satisfaction" }
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              variants={fadeIn}
-              whileHover={{ scale: 1.05 }}
-              className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-3 sm:p-4"
-            >
-              <motion.div 
-                className="text-2xl sm:text-3xl font-bold text-blue-400"
-              >
-                {item.number}
-              </motion.div>
-              <div className="text-xs sm:text-sm">{item.text}</div>
-            </motion.div>
-          ))}
+          The Most
+          <br />
+          <span className="text-royal-400">Trusted Roofers</span>
+          <br />
+          In East Texas.
+        </motion.h1>
+
+        {/* Subhead */}
+        <motion.div
+          variants={rise}
+          className="mt-8 md:mt-10 hairline max-w-md ml-0 mr-auto"
+        />
+        <motion.p
+          variants={rise}
+          className="mt-7 md:mt-8 max-w-2xl text-base md:text-lg text-white/85 font-medium leading-relaxed"
+        >
+          Locally owned and operated since 2008. A{' '}
+          <span className="text-white font-bold">10-year labor warranty</span> on
+          every roof, a 100% satisfaction guarantee, and a team that treats
+          your home like it's their own.
+        </motion.p>
+
+        {/* CTAs */}
+        <motion.div
+          variants={rise}
+          className="mt-10 md:mt-12 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
+        >
+          <a
+            href="#contact-form"
+            onClick={(e) => {
+              e.preventDefault();
+              document
+                .getElementById('contact-form')
+                ?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="group inline-flex items-center justify-center gap-3 bg-royal-600 hover:bg-royal-500 text-white px-8 py-4 md:py-5 text-[12px] md:text-[13px] uppercase tracking-eyebrow font-bold transition-colors shadow-[0_8px_40px_rgba(37,99,235,0.35)]"
+          >
+            Book Free Inspection
+            <FiArrowRight className="transition-transform group-hover:translate-x-1" />
+          </a>
+          <a
+            href="tel:+19033203030"
+            className="group inline-flex items-center justify-center gap-3 border-2 border-white/30 hover:border-white text-white px-8 py-4 md:py-5 text-[12px] md:text-[13px] uppercase tracking-eyebrow font-bold transition-colors"
+          >
+            <FiPhone />
+            Call (903) 320-3030
+          </a>
         </motion.div>
       </motion.div>
 
-      {/* Bottom fade to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-800 to-transparent z-10"></div>
+      {/* STATS FOOTER — clearly separated zone */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1, duration: 0.7 }}
+        className="relative z-20 mt-auto px-6 md:px-10 max-w-7xl mx-auto w-full pt-14 sm:pt-16 md:pt-24 pb-10 md:pb-14"
+      >
+        <div className="hairline mb-7 md:mb-8" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8">
+          {[
+            ['1200+', 'Projects Completed'],
+            ['5.0★', 'Customer Rating'],
+            ['25+', 'Years Experience'],
+            ['100%', 'Satisfaction'],
+          ].map(([num, label]) => (
+            <div key={label} className="flex flex-col">
+              <div className="font-display text-4xl md:text-5xl text-white leading-none">
+                {num}
+              </div>
+              <div className="mt-2.5 text-[10px] uppercase tracking-eyebrow text-white/60 font-bold">
+                {label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 md:bottom-12 left-0 right-0 h-24 flex items-end justify-center z-20">
-        <ScrollIndicator targetId="problem-solution" />
+      <div className="absolute bottom-3 left-0 right-0 z-30 h-12 hidden lg:block">
+        <ScrollIndicator
+          targetId="services"
+          label="Scroll"
+          className="bottom-0"
+        />
       </div>
-    </div>
+    </section>
   );
 }
 

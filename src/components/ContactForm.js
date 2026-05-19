@@ -1,291 +1,200 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
+import { FiPhone, FiMail, FiMapPin, FiClock, FiArrowRight } from 'react-icons/fi';
+
+function Field({ name, type = 'text', label, value, onChange, error, as = 'input', options = [] }) {
+  const filled = !!value;
+  return (
+    <div className={`field ${error ? 'error' : ''} ${filled && as === 'select' ? 'filled' : ''}`}>
+      {as === 'textarea' ? (
+        <textarea name={name} value={value} onChange={onChange} placeholder=" " />
+      ) : as === 'select' ? (
+        <select name={name} value={value} onChange={onChange}>
+          <option value="" disabled hidden></option>
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input type={type} name={name} value={value} onChange={onChange} placeholder=" " />
+      )}
+      <label>{label}</label>
+      {error && (
+        <span className="absolute -bottom-5 left-0 text-[10px] uppercase tracking-eyebrow font-bold text-red-400">
+          {error}
+        </span>
+      )}
+    </div>
+  );
+}
 
 function ContactForm() {
   const formRef = useRef();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    serviceType: '',
-    message: ''
+  const [data, setData] = useState({
+    name: '', email: '', phone: '', serviceType: '', message: '',
   });
-
   const [errors, setErrors] = useState({});
-  const [formStatus, setFormStatus] = useState({
-    submitted: false,
-    error: false,
-    message: ''
-  });
+  const [status, setStatus] = useState({ submitting: false, sent: false, error: false, message: '' });
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
-      newErrors.email = 'Valid email is required';
-    }
-
-    // Phone validation
-    const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    if (!formData.phone.trim() || !phoneRegex.test(formData.phone)) {
-      newErrors.phone = 'Valid phone number is required';
-    }
-
-    // Service type validation
-    if (!formData.serviceType) {
-      newErrors.serviceType = 'Please select a service type';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const validate = () => {
+    const e = {};
+    if (!data.name.trim()) e.name = 'Required';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) e.email = 'Invalid email';
+    if (!/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(data.phone)) e.phone = 'Invalid number';
+    if (!data.serviceType) e.serviceType = 'Choose one';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+  const onChange = (ev) => {
+    const { name, value } = ev.target;
+    setData((d) => ({ ...d, [name]: value }));
+    if (errors[name]) setErrors((er) => ({ ...er, [name]: '' }));
   };
 
-  const handleSubmit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      setFormStatus({
-        submitted: true,
-        error: true,
-        message: 'Please fill in all required fields correctly.'
-      });
-      return;
-    }
-
-    setFormStatus({ submitted: true, error: false, message: 'Sending...' });
-
+    if (!validate()) return;
+    setStatus({ submitting: true, sent: false, error: false, message: 'Sending…' });
     try {
       const result = await emailjs.sendForm(
         process.env.REACT_APP_EMAILJS_SERVICE_ID,
         process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
         formRef.current
       );
-
       if (result.text === 'OK') {
-        setFormStatus({
-          submitted: true,
-          error: false,
-          message: 'Thank you! We will contact you within 24 hours.'
-        });
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          serviceType: '',
-          message: ''
-        });
+        setStatus({ submitting: false, sent: true, error: false, message: 'Thank you. We will contact you within 24 hours.' });
+        setData({ name: '', email: '', phone: '', serviceType: '', message: '' });
       }
-    } catch (error) {
-      console.error('EmailJS Error:', error);
-      setFormStatus({
-        submitted: true,
-        error: true,
-        message: 'There was an error. Please try again or call us directly at (903) 320-3030.'
-      });
+    } catch (err) {
+      setStatus({ submitting: false, sent: false, error: true, message: 'Something went wrong. Please call (903) 320-3030.' });
     }
   };
 
-  const reviews = [
-    {
-      name: "Linda Robertson",
-      location: "Tyler, TX",
-      text: "I would highly recommend BXC Roofing! My experience with this company was awesome. Tyler Pegg and everyone at BXC were incredible. Each step in the roofing process was explained and the work completed beautifully and on time! I had never really thought about a roof being beautiful…but my roof is BEAUTIFUL!",
-      rating: 5,
-      image: "https://i.pravatar.cc/150?img=5"
-    },
-    {
-      name: "Helene Deisher",
-      location: "Longview, TX",
-      text: "Excellent job on our rental property roofs. They were finished quickly. Their work was clean and the roofs look wonderful. They also had to coordinate with our insurance company and they worked seamlessly with them. I can highly recommend them!",
-      rating: 5,
-      image: "https://i.pravatar.cc/150?img=9"
-    },
-    {
-      name: "Mark Little",
-      location: "Marshall, TX",
-      text: "BXC did an outstanding job on our new roof. Extremely easy to work with from start to finish. We were really impressed how they have separate managers for each step of the process. Brett, Luke, and Jake were extremely helpful. Thanks guys!!",
-      rating: 5,
-      image: "https://i.pravatar.cc/150?img=8"
-    }
-  ];
-
   return (
-    <section id="contact-form" className="relative py-16 md:py-20">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
+    <section id="contact-form" className="relative py-24 md:py-32 bg-charcoal-900">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
+          {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="lg:col-span-3 lg:flex lg:items-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-5"
           >
-            <div className="w-full">
-              <div className="text-center lg:text-left mb-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                  Get Your Free Estimate
-                </h2>
-                <p className="text-gray-400">
-                  Fill out the form below and we'll get back to you within 24 hours
-                </p>
-              </div>
+            <div className="flex items-center gap-4 text-[11px] uppercase tracking-eyebrow font-bold text-royal-400 mb-6">
+              <span className="w-10 h-px bg-royal-500" />
+              <span>06 / Get Started</span>
+            </div>
+            <h2 className="display-xxl text-5xl md:text-6xl lg:text-7xl text-white">
+              Book your
+              <br />
+              <span className="text-royal-400">free inspection.</span>
+            </h2>
+            <div className="hairline my-8 max-w-sm ml-0" />
+            <p className="text-white/75 leading-relaxed mb-10 max-w-md">
+              Fill out the form below and we'll get back to you within 24 hours. Fast response, fair pricing, honest work.
+            </p>
 
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your Name*"
-                    className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
-                      errors.name ? 'border-red-500' : 'border-gray-700'
-                    }`}
-                  />
-                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Email Address*"
-                      className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
-                        errors.email ? 'border-red-500' : 'border-gray-700'
-                      }`}
-                    />
-                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            <ul className="space-y-6">
+              {[
+                { icon: FiPhone, label: 'Call', value: '(903) 320-3030', href: 'tel:+19033203030' },
+                { icon: FiMail, label: 'Email', value: 'info@bxcroofing.com', href: 'mailto:info@bxcroofing.com' },
+                { icon: FiMapPin, label: 'Service Area', value: 'East Texas' },
+                { icon: FiClock, label: 'Hours', value: 'Mon–Sat · 7am to 7pm' },
+              ].map((item) => {
+                const I = item.icon;
+                const content = (
+                  <div className="flex items-center gap-5">
+                    <div className="w-11 h-11 bg-royal-600/15 border border-royal-500/30 flex items-center justify-center flex-shrink-0">
+                      <I className="text-royal-400" size={18} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <div className="text-[10px] uppercase tracking-eyebrow font-bold text-white/55 mb-1">
+                        {item.label}
+                      </div>
+                      <div className="text-white font-medium">{item.value}</div>
+                    </div>
                   </div>
+                );
+                return (
+                  <li key={item.label}>
+                    {item.href ? (
+                      <a href={item.href} className="block hover:text-royal-300 transition-colors">
+                        {content}
+                      </a>
+                    ) : (
+                      content
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.div>
 
-                  <div>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="Phone Number*"
-                      className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border ${
-                        errors.phone ? 'border-red-500' : 'border-gray-700'
-                      }`}
-                    />
-                    {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-                  </div>
+          {/* Right: form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="lg:col-span-7"
+          >
+            <div className="bg-charcoal-950 border border-white/10 p-8 md:p-12 relative">
+              <span className="absolute -top-3 left-8 text-[10px] uppercase tracking-eyebrow font-bold text-white bg-royal-600 px-3 py-2">
+                Free · No Obligation
+              </span>
+
+              <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-8 mt-2">
+                <Field name="name" label="Your Name" value={data.name} onChange={onChange} error={errors.name} />
+                <div className="grid md:grid-cols-2 gap-8">
+                  <Field name="email" type="email" label="Email Address" value={data.email} onChange={onChange} error={errors.email} />
+                  <Field name="phone" type="tel" label="Phone Number" value={data.phone} onChange={onChange} error={errors.phone} />
                 </div>
-
-                <select
+                <Field
                   name="serviceType"
-                  value={formData.serviceType}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg bg-gray-800 text-white border ${
-                    errors.serviceType ? 'border-red-500' : 'border-gray-700'
-                  }`}
-                >
-                  <option value="">Select Service Type*</option>
-                  <option value="roof-replacement">Roof Replacement</option>
-                  <option value="roof-repair">Roof Repair</option>
-                  <option value="emergency">Emergency Service</option>
-                  <option value="inspection">Free Inspection</option>
-                  <option value="other">Other</option>
-                </select>
-                {errors.serviceType && (
-                  <p className="text-red-500 text-sm mt-1">{errors.serviceType}</p>
-                )}
+                  as="select"
+                  label="Service Type"
+                  value={data.serviceType}
+                  onChange={onChange}
+                  error={errors.serviceType}
+                  options={[
+                    { value: 'roof-replacement', label: 'Roof Replacement' },
+                    { value: 'roof-repair', label: 'Roof Repair' },
+                    { value: 'emergency', label: 'Emergency Service' },
+                    { value: 'inspection', label: 'Free Inspection' },
+                    { value: 'other', label: 'Other' },
+                  ]}
+                />
+                <Field name="message" as="textarea" label="Additional details (optional)" value={data.message} onChange={onChange} />
 
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Additional Details"
-                  rows="4"
-                  className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-700"
-                ></textarea>
-
-                {formStatus.submitted && (
+                {status.message && (
                   <div
-                    className={`p-4 rounded-lg ${
-                      formStatus.error ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+                    className={`text-xs uppercase tracking-eyebrow font-bold border-l-2 pl-4 py-2 ${
+                      status.error
+                        ? 'border-red-500 text-red-400'
+                        : status.sent
+                        ? 'border-royal-500 text-royal-300'
+                        : 'border-white/30 text-white/70'
                     }`}
                   >
-                    {formStatus.message}
+                    {status.message}
                   </div>
                 )}
 
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ y: 0 }}
                   type="submit"
-                  className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  disabled={status.submitting}
+                  className="group w-full bg-royal-600 hover:bg-royal-500 disabled:opacity-60 text-white py-5 text-[13px] uppercase tracking-eyebrow font-bold flex items-center justify-center gap-3 transition-colors shadow-[0_8px_30px_rgba(37,99,235,0.35)]"
                 >
-                  Get Free Estimate
+                  {status.submitting ? 'Sending…' : 'Get My Free Estimate'}
+                  <FiArrowRight className="transition-transform group-hover:translate-x-1" />
                 </motion.button>
               </form>
-            </div>
-          </motion.div>
-
-          {/* Reviews Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="lg:col-span-2 flex flex-col justify-start space-y-6"
-          >
-            <div className="sticky top-24">
-              <div className="text-center mb-6">
-                <div className="flex justify-center items-center gap-1 text-yellow-400 text-3xl mb-2">
-                  ★★★★★
-                </div>
-                <h3 className="text-2xl font-bold text-white">Trusted by Texas Homeowners</h3>
-                <p className="text-gray-400">Join our satisfied customers</p>
-              </div>
-
-              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
-                {reviews.map((review, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-gray-800/50 backdrop-blur-lg rounded-lg p-4 shadow-lg"
-                  >
-                    <div className="flex items-center mb-2">
-                      <img
-                        src={review.image}
-                        alt={review.name}
-                        className="w-10 h-10 rounded-full mr-3"
-                      />
-                      <div>
-                        <h4 className="text-white font-semibold">{review.name}</h4>
-                        <p className="text-gray-400 text-sm">{review.location}</p>
-                      </div>
-                      <div className="ml-auto text-yellow-400 text-sm">★★★★★</div>
-                    </div>
-                    <p className="text-gray-300 text-sm">{review.text}</p>
-                  </motion.div>
-                ))}
-              </div>
             </div>
           </motion.div>
         </div>

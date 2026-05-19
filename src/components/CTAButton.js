@@ -1,52 +1,50 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { FiArrowRight } from 'react-icons/fi';
 
-function CTAButton({ 
-  text, 
-  onClick, 
-  type = 'primary', 
+function CTAButton({
+  text,
+  onClick,
+  type = 'primary',
   size = 'medium',
-  icon = null,
-  scrollTo = "contact-form"
+  scrollTo = 'contact-form',
+  className = '',
 }) {
-  const baseStyles = "font-semibold rounded-lg transition-all duration-300 flex items-center justify-center";
-  
   const typeStyles = {
-    primary: "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white",
-    secondary: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white",
-    outline: "border-2 border-white text-white hover:bg-white hover:text-gray-900"
+    primary:
+      'bg-royal-600 hover:bg-royal-500 text-white border border-royal-600 hover:border-royal-500',
+    ghost:
+      'bg-transparent text-white hover:bg-white/5 border border-white/25 hover:border-white',
+    light:
+      'bg-white text-charcoal-950 hover:bg-royal-500 hover:text-white border border-white',
   };
 
   const sizeStyles = {
-    small: "px-4 py-2 text-sm",
-    medium: "px-6 py-3 text-base",
-    large: "px-8 py-4 text-lg"
+    small: 'px-5 py-3 text-[11px]',
+    medium: 'px-7 py-4 text-xs',
+    large: 'px-9 py-5 text-sm',
   };
 
   const handleClick = () => {
     if (scrollTo) {
-      const element = document.getElementById(scrollTo);
-      if (element) {
-        element.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
+      const el = document.getElementById(scrollTo);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     if (onClick) onClick();
   };
 
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className={`${baseStyles} ${typeStyles[type]} ${sizeStyles[size]} shadow-lg hover:shadow-xl`}
+      whileHover={{ y: -1 }}
+      whileTap={{ y: 0 }}
+      transition={{ duration: 0.2 }}
       onClick={handleClick}
+      className={`group inline-flex items-center justify-center gap-3 font-bold uppercase tracking-eyebrow transition-colors duration-300 ${typeStyles[type]} ${sizeStyles[size]} ${className}`}
     >
       <span>{text}</span>
-      {icon && <span className="ml-2">{icon}</span>}
+      <FiArrowRight className="text-base transition-transform duration-300 group-hover:translate-x-1" />
     </motion.button>
   );
 }
 
-export default CTAButton; 
+export default CTAButton;

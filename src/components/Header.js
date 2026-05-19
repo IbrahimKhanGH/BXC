@@ -1,196 +1,139 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import bxcLogo from "../assets/bxclogo.png";
-import CTAButton from "./CTAButton";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FiPhone, FiMenu, FiX } from 'react-icons/fi';
+import bxcLogo from '../assets/bxclogo.png';
 
 function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollToSection = (e, sectionId) => {
+  const go = (e, id) => {
     e.preventDefault();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMobileMenuOpen(false); // Close the mobile menu if open
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    setOpen(false);
   };
+
+  const links = [
+    { id: 'services', label: 'Services' },
+    { id: 'work', label: 'Our Work' },
+    { id: 'process', label: 'Process' },
+    { id: 'testimonials', label: 'Reviews' },
+    { id: 'contact-form', label: 'Contact' },
+  ];
 
   return (
     <>
-      {/* Header Section */}
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/75 backdrop-blur-sm shadow-lg py-2"
-            : "bg-gradient-to-b from-black/50 to-transparent py-4"
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? 'bg-charcoal-950/90 backdrop-blur-xl border-b border-white/5 py-2.5'
+            : 'bg-gradient-to-b from-black/70 to-transparent py-4'
         }`}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div className="flex items-center justify-between gap-4">
             {/* Logo */}
-            <motion.a
-              href="#"
-              onClick={(e) => scrollToSection(e, "hero")}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center cursor-pointer mr-4"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <a
+              href="#hero"
+              onClick={(e) => go(e, 'hero')}
+              className="flex items-center gap-3"
             >
               <img
                 src={bxcLogo}
                 alt="BXC Roofing"
-                className={`h-8 md:h-14 transition-all duration-300 ${
-                  isScrolled ? "brightness-100" : "brightness-200"
-                }`}
+                className="h-10 md:h-12 brightness-[1.6]"
               />
-            </motion.a>
+            </a>
 
-            {/* Navigation Links - Hidden on Mobile */}
-            <div className="hidden md:flex items-center space-x-8 flex-grow justify-center">
-              <NavLink
-                href="#problem-solution"
-                isScrolled={isScrolled}
-                onClick={(e) => scrollToSection(e, "problem-solution")}
-              >
-                Services
-              </NavLink>
-              <NavLink
-                href="#process"
-                isScrolled={isScrolled}
-                onClick={(e) => scrollToSection(e, "process")}
-              >
-                Process
-              </NavLink>
-              <NavLink
-                href="#testimonials"
-                isScrolled={isScrolled}
-                onClick={(e) => scrollToSection(e, "testimonials")}
-              >
-                Reviews
-              </NavLink>
-              <NavLink
-                href="#contact-form"
-                isScrolled={isScrolled}
-                onClick={(e) => scrollToSection(e, "contact-form")}
-              >
-                Contact
-              </NavLink>
-            </div>
-
-            {/* Contact Info & CTA */}
-            <div className="hidden md:flex items-center space-x-6">
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                href="tel:+9033203030"
-                className={`flex items-center text-lg font-semibold transition-colors ${
-                  isScrolled
-                    ? "text-gray-800 hover:text-blue-600"
-                    : "text-white hover:text-yellow-400 drop-shadow-md"
-                }`}
-              >
-                <svg
-                  className="w-6 h-6 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {/* Center nav */}
+            <nav className="hidden lg:flex items-center gap-8">
+              {links.map((l) => (
+                <a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  onClick={(e) => go(e, l.id)}
+                  className="text-[11px] uppercase tracking-eyebrow font-bold text-white/75 hover:text-white transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                (903) 320-3030
-              </motion.a>
-              <CTAButton                                                                                                                      
-                text="Free Inspection"
-                type="primary"
-                size="small"
-                scrollTo="contact-form"
-              />
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+
+            {/* Right: phone + CTA */}
+            <div className="hidden md:flex items-center gap-5">
+              <a
+                href="tel:+19033203030"
+                className="flex items-center gap-2 text-white hover:text-royal-300 transition-colors"
+              >
+                <FiPhone className="text-royal-400" />
+                <span className="font-bold tracking-wide">(903) 320-3030</span>
+              </a>
+              <a
+                href="#contact-form"
+                onClick={(e) => go(e, 'contact-form')}
+                className="text-[11px] uppercase tracking-eyebrow font-bold text-white bg-royal-600 hover:bg-royal-500 px-5 py-3 transition-colors"
+              >
+                Free Inspection
+              </a>
             </div>
 
-            {/* Mobile Menu Button */}
-            <motion.button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              whileTap={{ scale: 0.95 }}
-              className="md:hidden p-2 mr-2"
+            {/* Mobile */}
+            <button
+              onClick={() => setOpen(!open)}
+              className="md:hidden p-2 text-white"
+              aria-label="Menu"
             >
-              <svg
-                className={`w-6 h-6 ${
-                  isScrolled ? "text-gray-800" : "text-white drop-shadow-md"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={
-                    isMobileMenuOpen
-                      ? "M6 18L18 6M6 6l12 12"
-                      : "M4 6h16M4 12h16M4 18h16"
-                  }
-                />
-              </svg>
-            </motion.button>
+              {open ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
           </div>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
+        {open && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-[60px] left-0 right-0 bg-gray-900/95 backdrop-blur-sm z-40 border-t border-gray-800"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-charcoal-950/97 backdrop-blur-xl md:hidden pt-24"
           >
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex flex-col space-y-4">
-                <MobileNavLink
-                  href="#problem-solution"
-                  onClick={(e) => scrollToSection(e, "problem-solution")}
+            <div className="px-8 flex flex-col gap-5">
+              {links.map((l, i) => (
+                <motion.a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  onClick={(e) => go(e, l.id)}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.05 * i }}
+                  className="font-display text-5xl text-white border-b border-white/10 pb-3"
                 >
-                  Services
-                </MobileNavLink>
-                <MobileNavLink
-                  href="#process"
-                  onClick={(e) => scrollToSection(e, "process")}
-                >
-                  Process
-                </MobileNavLink>
-                <MobileNavLink
-                  href="#testimonials"
-                  onClick={(e) => scrollToSection(e, "testimonials")}
-                >
-                  Reviews
-                </MobileNavLink>
-                <MobileNavLink
-                  href="#contact-form"
-                  onClick={(e) => scrollToSection(e, "contact-form")}
-                >
-                  Contact
-                </MobileNavLink>
-              </div>
+                  {l.label}
+                </motion.a>
+              ))}
+              <a
+                href="tel:+19033203030"
+                className="mt-6 flex items-center gap-3 text-royal-400 text-xl font-bold"
+              >
+                <FiPhone /> (903) 320-3030
+              </a>
+              <a
+                href="#contact-form"
+                onClick={(e) => go(e, 'contact-form')}
+                className="mt-2 text-center text-[12px] uppercase tracking-eyebrow font-bold text-white bg-royal-600 px-5 py-4"
+              >
+                Book Free Inspection
+              </a>
             </div>
           </motion.div>
         )}
@@ -198,33 +141,5 @@ function Header() {
     </>
   );
 }
-
-// Navigation Link Component
-const NavLink = ({ href, children, isScrolled, onClick }) => (
-  <motion.a
-    href={href}
-    onClick={onClick}
-    whileHover={{ y: -2 }}
-    className={`font-medium transition-colors ${
-      isScrolled
-        ? "text-gray-600 hover:text-red-500"
-        : "text-white/90 hover:text-white drop-shadow-md"
-    }`}
-  >
-    {children}
-  </motion.a>
-);
-
-// Mobile Navigation Link Component
-const MobileNavLink = ({ href, children, onClick }) => (
-  <motion.a
-    href={href}
-    onClick={onClick}
-    whileTap={{ scale: 0.95 }}
-    className="text-white hover:text-yellow-400 py-2 transition-colors"
-  >
-    {children}
-  </motion.a>
-);
 
 export default Header;
