@@ -51,7 +51,7 @@ function Header() {
               <img
                 src={bxcLogo}
                 alt="BXC Roofing"
-                className="h-10 md:h-12 rounded-sm"
+                className="h-10 md:h-12 mix-blend-screen"
               />
             </a>
 
